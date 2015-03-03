@@ -1,0 +1,51 @@
+#content-block-list-wrapper
+	h1 Content Blocks
+	a#create-new-button href="#/content-blocks/new" 
+		i.fa.fa-plus
+		| &nbsp;Create New
+	.block-table-wrapper
+		table.content-block-table
+			thead
+				tr
+					th
+						| Id
+					th
+						| Title
+					th
+						| Slug
+					th
+						| Version
+					th
+						| Status
+					th
+						| Last Updated
+					th
+					  | Actions
+			tbody
+				tr ng-repeat="block in contentBlocks"
+					td 	
+						| {{ block.id }}
+					td 
+						| {{ block.title }}
+					td
+						| {{ block.slug }}
+					td
+						| {{ block.version }}
+					td
+						| {{ block.status | capitalize }}
+					td
+						| {{ block.updated_at | date:'MMM d, y h:mm a' }}
+					td
+						ul.block-actions
+							li
+								a.edit-block-button ng-href="#/content-blocks/{{block.id}}/edit"
+									i.fa.fa-edit
+									| &nbsp; Edit
+							li
+								a.duplicate-block-button ng-click="duplicate(block)" 
+									i.fa.fa-copy
+									| &nbsp; Duplicate
+							li
+								button.delete-block-button ng-confirm-message="Are you sure you want to delete this block?" ng-confirm-click="destroy(block)" 
+									i.fa.fa-trash
+									| &nbsp; Delete

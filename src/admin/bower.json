@@ -1,0 +1,17 @@
+{
+  "name": "sapphire-cms-admin",
+  "version": "0.0.0",
+  "description": "AngularJS module for the administration interface of SapphireCMS applications",
+  "main": "./dist/sapphire-cms-admin.js",
+  "authors": [
+    "Kyle Van Wagenen"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

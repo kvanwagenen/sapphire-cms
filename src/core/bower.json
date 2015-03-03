@@ -1,0 +1,17 @@
+{
+  "name": "sapphire-cms-core",
+  "version": "0.0.0",
+  "description": "AngularJS module containing components shared by other SapphireCMS modules",
+  "main": "./dist/sapphire-cms-core.js",
+  "authors": [
+    "Kyle Van Wagenen"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

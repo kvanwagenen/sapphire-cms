@@ -1,0 +1,9 @@
+#content-block-wrapper {
+	@extend .center-block;
+	width: 100%;
+}
+
+.save-button {
+  @extend .btn;
+  @extend .btn-success;
+}

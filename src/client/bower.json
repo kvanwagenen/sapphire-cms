@@ -1,0 +1,17 @@
+{
+  "name": "sapphire-cms-client",
+  "version": "0.0.0",
+  "description": "AngularJS module to be used by SapphireCMS client applications",
+  "main": "./dist/sapphire-cms-client.js",
+  "authors": [
+    "Kyle Van Wagenen"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
