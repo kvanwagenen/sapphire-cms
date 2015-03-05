@@ -1,3 +1,4 @@
+// Gulp and plugins
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
 var sass = require('gulp-sass');
@@ -5,8 +6,9 @@ var coffee = require('gulp-coffee');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var slim = require('gulp-slim');
-// var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
 var sourcemaps = require('gulp-sourcemaps');
+// var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
+
 var del = require('del');
 var path = require('path');
 
@@ -43,8 +45,8 @@ var compileModuleJs = function(src, dest){
     .pipe(gulp.dest(path.join('dist')));
 };
 
-var compileModuleTemplates = function(src){
-  return gulp.src('./src/**/*.slim')
+var compileModuleTemplates = function(src, dest){
+  return gulp.src(src)
     .pipe(gulpif(/[.]slim$/, slim({
       pretty: true,
       options: "attr_list_delims={'(' => ')', '[' => ']'}"
@@ -70,14 +72,18 @@ gulp.task('compile:client:js', function() {
 
 gulp.task('compile:client:css', function(){
   return compileModuleCss(files.client.css, 'client/sapphire-cms.client.css');
-})
+});
 
 gulp.task('compile:admin:js', function(){
   return compileModuleJs(files.admin.js, 'admin/sapphire-cms.admin.js');
 });
 
+gulp.task('compile:admin:css', function(){
+  return compileModuleCss(files.admin.css, 'admin/sapphire-cms.admin.css');
+});
+
 gulp.task('compile:admin:templates', function(){
-  return compileModuleTemplates(files.admin.templates)
+  return compileModuleTemplates(files.admin.templates, 'admin/templates');
 });
 
 // Copy all static images
@@ -101,6 +107,7 @@ gulp.task('watch', function() {
   gulp.watch(files.client.js, ['compile:client:js']);
   gulp.watch(files.admin.js, ['compile:admin:js']);
   gulp.watch(files.client.css, ['compile:client:css']);
+  gulp.watch(files.admin.css, ['compile:admin:css']);
   gulp.watch(files.admin.templates, ['compile:admin:templates']);
   // gulp.watch(paths.images, ['images']);
 });
