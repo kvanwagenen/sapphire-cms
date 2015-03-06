@@ -1,4 +1,4 @@
-window.SapphireAdmin = angular.module 'sp.admin', ['ngRoute', 'sp.common']
+window.SapphireAdmin = angular.module 'sp.admin', ['ngRoute', 'sp.core']
 
 SapphireAdmin.config ['$routeProvider', ($routeProvider) ->
 	$routeProvider
