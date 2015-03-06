@@ -9,6 +9,8 @@ var slim = require('gulp-slim');
 var sourcemaps = require('gulp-sourcemaps');
 // var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
 
+var karma = require('karma').server;
+
 var del = require('del');
 var path = require('path');
 
@@ -22,14 +24,10 @@ var files = {
   },
   admin: {
     css: ['src/admin/**/*.scss', 'src/client/**/*.css'],
-    js: ['src/admin/**/*.coffee', 'src/admin/**/*.js'],
+    js: ['src/admin/app/**/*.coffee', 'src/admin/app/**/*.js'],
     templates: ['src/admin/templates/**/*.html', 'src/admin/templates/**/*.slim']
   }
 };
-
-gulp.task('clean', function(cb) {
-  del(['dist/**'], cb);
-});
 
 var compileModuleCss = function(src, dest){
   return gulp.src(src)
@@ -51,8 +49,12 @@ var compileModuleTemplates = function(src, dest){
       pretty: true,
       options: "attr_list_delims={'(' => ')', '[' => ']'}"
     })))
-    .pipe(gulp.dest(path.join('dist')))
+    .pipe(gulp.dest(path.join('dist', dest)))
 }
+
+gulp.task('clean', function(cb) {
+  del(['dist/**'], cb);
+});
 
 gulp.task('compile:core:js', function() {
   // Minify and copy all JavaScript (except vendor scripts)
@@ -86,20 +88,22 @@ gulp.task('compile:admin:templates', function(){
   return compileModuleTemplates(files.admin.templates, 'admin/templates');
 });
 
-// Copy all static images
-gulp.task('images', ['clean'], function() {
-  return gulp.src(paths.images)
-    //.pipe(imagemin({optimizationLevel: 5})) // Removed because plugin doesn't work on Windows as a result of long paths
-    .pipe(gulp.dest('build/img'));
-});
-
 gulp.task('compile:all', [
-  'compile:core:js', 
+  'compile:admin:js',
   'compile:client:js', 
-  'compile:admin:js', 
+  'compile:core:js',
+  'compile:admin:css',   
   'compile:client:css',
   'compile:admin:templates'
 ])
+
+gulp.task('test', function(doneCb){
+  karma.start({
+    configFile: __dirname + 'test/karma.conf.js',
+    autoWatch: false,
+    singleRun: true
+  }, doneCb);
+});
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
@@ -109,7 +113,6 @@ gulp.task('watch', function() {
   gulp.watch(files.client.css, ['compile:client:css']);
   gulp.watch(files.admin.css, ['compile:admin:css']);
   gulp.watch(files.admin.templates, ['compile:admin:templates']);
-  // gulp.watch(paths.images, ['images']);
 });
 
 // The default task (called when you run `gulp` from cli)
