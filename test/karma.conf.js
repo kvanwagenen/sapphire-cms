@@ -20,7 +20,9 @@ module.exports = function(config) {
       {pattern: 'test/bower_components/angular-mocks/angular-mocks.js', included: true},
       {pattern: 'dist/**/*.js'},
       {pattern: 'src/admin/test/**/*.js'},
-      {pattern: 'src/admin/test/**/*.coffee'}
+      {pattern: 'src/admin/test/**/*.coffee'},
+      {pattern: 'src/core/test/**/*.js'},
+      {pattern: 'src/core/test/**/*.coffee'}
     ],
 
 
@@ -32,6 +34,18 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      '**/*.coffee': ['coffee']
+    },
+
+    coffeePreprocessor: {
+      options: {
+        bare: true,
+        sourceMap: false
+      },
+
+      transformPath: function(path){
+        return path.replace(/\.coffee$/, '.js');
+      }
     },
 
 
