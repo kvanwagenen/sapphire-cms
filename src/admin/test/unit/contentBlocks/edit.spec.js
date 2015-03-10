@@ -3,31 +3,47 @@ describe('Content blocks edit controller', function(){
 	beforeEach(module('sp.admin'));
 
 	var $controller;
-	var deferred;
+	var saveDeferred, findDeferred;
 
-	beforeEach(inject(function(_$controller_, _$q_){
+	beforeEach(inject(function(_$controller_, _$q_, _$rootScope_){
 		$controller = _$controller_;
 		$q = _$q_;
+		rootScope = _$rootScope_;
 	}));
 
 	beforeEach(function(){
 		contentBlockService = {
-			save: function(){},
-			find: function(){}
+			save: function(){
+				saveDeferred = $q.defer();
+				return saveDeferred.promise;
+			},
+			find: function(){
+				findDeferred = $q.defer();
+				return findDeferred.promise;
+			}
 		}
 		$scope = {
 			block: {
 				key: "value"
 			}
 		};
-		deferred = $q.defer();
-		spyOn(contentBlockService, "find").and.returnValue($q.when({}));
-		spyOn(contentBlockService, "save").and.returnValue(deferred.promise);
+		spyOn(contentBlockService, "find").and.callThrough();
+		spyOn(contentBlockService, "save").and.callThrough();
 		controller = $controller('ContentBlockEditController', {
 			$scope: $scope,
 			ContentBlockService: contentBlockService
 		});
 	});
+
+	describe('on construction', function(){
+		it('should call ContentBlockService.find and initialize $scope.block with the returned value', function(){
+			expect(contentBlockService.find).toHaveBeenCalled();
+			findDeferred.resolve({name: "name"})
+			rootScope.$apply();
+			expect($scope.block).toEqual({name: "name"});
+		});
+	});
+	
 
 	describe('$scope.save', function(){
 		it('should call save on the ContentBlockService', function(){
@@ -43,13 +59,15 @@ describe('Content blocks edit controller', function(){
 
 			it('should alert when successfully saved', function(){
 				$scope.save();
-				deferred.resolve();
+				saveDeferred.resolve();
+				rootScope.$apply();
 				expect(window.alert).toHaveBeenCalled();
 			});
 
 			it('should alert when save failed', function(){
 				$scope.save();
-				deferred.reject();
+				saveDeferred.reject();
+				rootScope.$apply();
 				expect(window.alert).toHaveBeenCalled();
 			});
 		})		
