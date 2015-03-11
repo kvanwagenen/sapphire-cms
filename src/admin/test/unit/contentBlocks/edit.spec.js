@@ -8,7 +8,7 @@ describe('Content blocks edit controller', function(){
 	beforeEach(inject(function(_$controller_, _$q_, _$rootScope_){
 		$controller = _$controller_;
 		$q = _$q_;
-		rootScope = _$rootScope_;
+		$rootScope = _$rootScope_;
 	}));
 
 	beforeEach(function(){
@@ -39,7 +39,7 @@ describe('Content blocks edit controller', function(){
 		it('should call ContentBlockService.find and initialize $scope.block with the returned value', function(){
 			expect(contentBlockService.find).toHaveBeenCalled();
 			findDeferred.resolve({name: "name"})
-			rootScope.$apply();
+			$rootScope.$apply();
 			expect($scope.block).toEqual({name: "name"});
 		});
 	});
@@ -60,14 +60,14 @@ describe('Content blocks edit controller', function(){
 			it('should alert when successfully saved', function(){
 				$scope.save();
 				saveDeferred.resolve();
-				rootScope.$apply();
+				$rootScope.$apply();
 				expect(window.alert).toHaveBeenCalled();
 			});
 
 			it('should alert when save failed', function(){
 				$scope.save();
 				saveDeferred.reject();
-				rootScope.$apply();
+				$rootScope.$apply();
 				expect(window.alert).toHaveBeenCalled();
 			});
 		})		
