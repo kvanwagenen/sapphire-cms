@@ -1,1 +1,1 @@
-angular.module 'sp.client', ['sp.common']	
+angular.module 'sp.client', ['ngRoute', 'sp.core']
