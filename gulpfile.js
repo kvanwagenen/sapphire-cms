@@ -22,11 +22,17 @@ var localRailsEngineAssetsPath = "../sapphire_cms_rails/app/assets"
 
 var files = {
   core: {
-    js: ['src/core/app/**/*.coffee', 'src/core/app/**/*.js']
+    js: ['src/core/app/**/*.coffee', 'src/core/app/**/*.js'],
+    dist: {
+      js: ['dist/core/sapphire-cms.core.js']
+    }
   },
   client: {
     js: ['src/client/app/**/*.coffee', 'src/client/app/**/*.js'],
-    css: ['src/client/**/*.scss', 'src/client/**/*.css']
+    css: ['src/client/**/*.scss', 'src/client/**/*.css'],
+    dist: {
+      js: ['dist/client/sapphire-cms.client.js']
+    }
   },
   admin: {
     css: ['src/admin/**/*.scss', 'src/client/**/*.css'],
@@ -70,7 +76,12 @@ gulp.task('clean', function(cb) {
 gulp.task('compile:core:js', function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
-  return compileModuleJs(files.core.js, 'core/sapphire-cms.core.js');
+  var stream = compileModuleJs(files.core.js, 'core/sapphire-cms.core.js');
+  stream.on('end', function(){
+    if(argv.syncToRails){
+      gulp.start('copy:core:js:rails');
+    }
+  });
     // .pipe(sourcemaps.init())
     // .pipe(coffee())
     // .pipe(uglify())
@@ -80,11 +91,12 @@ gulp.task('compile:core:js', function() {
 });
 
 gulp.task('compile:client:js', function() {
-  return compileModuleJs(files.client.js, 'client/sapphire-cms.client.js');
-});
-
-gulp.task('compile:client:css', function(){
-  return compileModuleCss(files.client.css, 'client/sapphire-cms.client.css');
+  var stream = compileModuleJs(files.client.js, 'client/sapphire-cms.client.js');
+  stream.on('end', function(){
+    if(argv.syncToRails){
+      gulp.start('copy:client:js:rails');
+    }
+  });
 });
 
 gulp.task('compile:admin:js', function(){
@@ -156,10 +168,20 @@ gulp.task('copy:admin:templates:rails', function(){
   return copyFilesToLocalRailsEngine(files.admin.dist.templates, path.join(localRailsEngineAssetsPath, 'templates'));
 });
 
+gulp.task('copy:client:js:rails', function(){
+  return copyFilesToLocalRailsEngine(files.client.dist.js, path.join(localRailsEngineAssetsPath, 'javascripts', 'sapphire_cms'));
+});
+
+gulp.task('copy:core:js:rails', function(){
+  return copyFilesToLocalRailsEngine(files.core.dist.js, path.join(localRailsEngineAssetsPath, 'javascripts', 'sapphire_cms'));
+});
+
 gulp.task('copy:rails', function(){
   gulp.start('copy:admin:css:rails');
   gulp.start('copy:admin:js:rails');
   gulp.start('copy:admin:templates:rails');
+  gulp.start('copy:client:js:rails');
+  gulp.start('copy:core:js:rails');
 });
 
 
@@ -167,8 +189,7 @@ gulp.task('compile:all', [
   'compile:admin:js',
   'compile:client:js', 
   'compile:core:js',
-  'compile:admin:css',   
-  'compile:client:css',
+  'compile:admin:css',
   'compile:admin:templates'
 ]);
 
@@ -182,12 +203,11 @@ gulp.task('test', function(doneCb){
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-  gulp.watch(files.core.js, ['compile:core:js']);
-  gulp.watch(files.client.js, ['compile:client:js']);
   gulp.watch(files.admin.js, ['compile:admin:js']);
-  gulp.watch(files.client.css, ['compile:client:css']);
   gulp.watch(files.admin.css, ['compile:admin:css']);
   gulp.watch(files.admin.templates, ['compile:admin:templates']);
+  gulp.watch(files.client.js, ['compile:client:js']);
+  gulp.watch(files.core.js, ['compile:core:js']);
 });
 
 // The default task (called when you run `gulp` from cli)
