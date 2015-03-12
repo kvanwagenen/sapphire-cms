@@ -16,10 +16,10 @@ var path = require('path');
 
 var files = {
   core: {
-    js: ['src/core/**/*.coffee', 'src/core/**/*.js']
+    js: ['src/core/app/**/*.coffee', 'src/core/app/**/*.js']
   },
   client: {
-    js: ['src/client/**/*.coffee', 'src/client/**/*.js'],
+    js: ['src/client/app/**/*.coffee', 'src/client/app/**/*.js'],
     css: ['src/client/**/*.scss', 'src/client/**/*.css']
   },
   admin: {
