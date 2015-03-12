@@ -21,6 +21,8 @@ module.exports = function(config) {
       {pattern: 'dist/**/*.js'},
       {pattern: 'src/admin/test/**/*.js'},
       {pattern: 'src/admin/test/**/*.coffee'},
+      {pattern: 'src/client/test/**/*.js'},
+      {pattern: 'src/client/test/**/*.coffee'},
       {pattern: 'src/core/test/**/*.js'},
       {pattern: 'src/core/test/**/*.coffee'}
     ],
