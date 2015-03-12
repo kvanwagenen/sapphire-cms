@@ -7,12 +7,18 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var slim = require('gulp-slim');
 var sourcemaps = require('gulp-sourcemaps');
+var gulpcopy = require('gulp-copy');
+var debug = require('gulp-debug');
 // var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
 
+var argv = require('yargs').argv;
 var karma = require('karma').server;
 
 var del = require('del');
 var path = require('path');
+var fse = require('fs-extra');
+
+var localRailsEngineAssetsPath = "../sapphire_cms_rails/app/assets"
 
 var files = {
   core: {
@@ -25,7 +31,12 @@ var files = {
   admin: {
     css: ['src/admin/**/*.scss', 'src/client/**/*.css'],
     js: ['src/admin/app/**/*.coffee', 'src/admin/app/**/*.js'],
-    templates: ['src/admin/templates/**/*.html', 'src/admin/templates/**/*.slim']
+    templates: ['src/admin/templates/**/*.html', 'src/admin/templates/**/*.slim'],
+    dist: { 
+      css: ['dist/admin/sapphire-cms.admin.css'],
+      js: ['dist/admin/sapphire-cms.admin.js'],
+      templates: ['dist/admin/templates/**/*']
+    }
   }
 };
 
@@ -50,6 +61,12 @@ var compileModuleTemplates = function(src, dest){
       options: "attr_list_delims={'(' => ')', '[' => ']'}"
     })))
     .pipe(gulp.dest(path.join('dist', dest)))
+}
+
+var copyFilesToLocalRailsEngine = function(src, destDir){
+  return gulp.src(src)
+    .pipe(debug({title: 'sapphire'}))
+    .pipe(gulpcopy(destDir, {prefix: (src[0].split('/').length)}));
 }
 
 gulp.task('clean', function(cb) {
@@ -87,6 +104,11 @@ gulp.task('compile:admin:css', function(){
 gulp.task('compile:admin:templates', function(){
   return compileModuleTemplates(files.admin.templates, 'admin/templates');
 });
+
+gulp.task('copy:rails', function(){
+  copyFilesToLocalRailsEngine(files.admin.dist.js, path.join(localRailsEngineAssetsPath, 'javascripts', 'sapphire_cms'));
+  copyFilesToLocalRailsEngine(files.admin.dist.templates, path.join(localRailsEngineAssetsPath, 'templates'));
+})
 
 gulp.task('compile:all', [
   'compile:admin:js',
