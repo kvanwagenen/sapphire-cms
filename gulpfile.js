@@ -16,7 +16,7 @@ var karma = require('karma').server;
 
 var del = require('del');
 var path = require('path');
-var fse = require('fs-extra');
+var changeCase = require('change-case');
 
 var localRailsEngineAssetsPath = "../sapphire_cms_rails/app/assets"
 
@@ -63,12 +63,6 @@ var compileModuleTemplates = function(src, dest){
     .pipe(gulp.dest(path.join('dist', dest)))
 }
 
-var copyFilesToLocalRailsEngine = function(src, destDir){
-  return gulp.src(src)
-    .pipe(debug({title: 'sapphire'}))
-    .pipe(gulpcopy(destDir, {prefix: (src[0].split('/').length)}));
-}
-
 gulp.task('clean', function(cb) {
   del(['dist/**'], cb);
 });
@@ -94,21 +88,80 @@ gulp.task('compile:client:css', function(){
 });
 
 gulp.task('compile:admin:js', function(){
-  return compileModuleJs(files.admin.js, 'admin/sapphire-cms.admin.js');
+  var stream = compileModuleJs(files.admin.js, 'admin/sapphire-cms.admin.js');
+  stream.on('end', function(){
+    if(argv.syncToRails){
+      gulp.start('copy:admin:js:rails');
+    }
+  });
 });
 
 gulp.task('compile:admin:css', function(){
-  return compileModuleCss(files.admin.css, 'admin/sapphire-cms.admin.css');
+  var stream = compileModuleCss(files.admin.css, 'admin/sapphire-cms.admin.css');
+  stream.on('end', function(){
+    if(argv.syncToRails){
+      gulp.start('copy:admin:css:rails');
+    }
+  });
 });
 
 gulp.task('compile:admin:templates', function(){
-  return compileModuleTemplates(files.admin.templates, 'admin/templates');
+  var stream = compileModuleTemplates(files.admin.templates, 'admin/templates');
+  stream.on('end', function(){
+    if(argv.syncToRails){
+      gulp.start('copy:admin:templates:rails');
+    }
+  });
+});
+
+
+// Tasks to sync files to neighboring sapphire_cms_rails Rails engine for development
+var copyFilesToLocalRailsEngine = function(src, destDir){
+  var prefix = 0;
+  var wildCardIndex = src[0].indexOf('*');
+  if(wildCardIndex >= 0){
+    pathBeforeWildcard = src[0].slice(0,wildCardIndex);
+    prefix = pathBeforeWildcard.split('/').length - 1;
+  }else{
+    prefix = src[0].split('/').length
+  }
+  return gulp.src(src)
+    .pipe(debug({title: 'sapphire'}))
+    .pipe(gulpcopy(destDir, {
+      prefix: prefix,
+
+      // Change file leading directories to snake case for Rails
+      destPath: function(path){
+        var parts = path.split('/');
+        var name = parts.pop();
+        modifiedParts = [];
+        parts.forEach(function(part){
+          modifiedParts.push(changeCase.snakeCase(part));
+        });
+        modifiedParts.push(name);
+        return modifiedParts.join('/');
+      }
+    }));
+}
+
+gulp.task('copy:admin:css:rails', function(){
+  return copyFilesToLocalRailsEngine(files.admin.dist.css, path.join(localRailsEngineAssetsPath, 'stylesheets', 'sapphire_cms'));
+})
+
+gulp.task('copy:admin:js:rails', function(){
+  return copyFilesToLocalRailsEngine(files.admin.dist.js, path.join(localRailsEngineAssetsPath, 'javascripts', 'sapphire_cms'));
+});
+
+gulp.task('copy:admin:templates:rails', function(){
+  return copyFilesToLocalRailsEngine(files.admin.dist.templates, path.join(localRailsEngineAssetsPath, 'templates'));
 });
 
 gulp.task('copy:rails', function(){
-  copyFilesToLocalRailsEngine(files.admin.dist.js, path.join(localRailsEngineAssetsPath, 'javascripts', 'sapphire_cms'));
-  copyFilesToLocalRailsEngine(files.admin.dist.templates, path.join(localRailsEngineAssetsPath, 'templates'));
-})
+  gulp.start('copy:admin:css:rails');
+  gulp.start('copy:admin:js:rails');
+  gulp.start('copy:admin:templates:rails');
+});
+
 
 gulp.task('compile:all', [
   'compile:admin:js',
@@ -117,7 +170,7 @@ gulp.task('compile:all', [
   'compile:admin:css',   
   'compile:client:css',
   'compile:admin:templates'
-])
+]);
 
 gulp.task('test', function(doneCb){
   karma.start({
