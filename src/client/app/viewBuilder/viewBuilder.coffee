@@ -1,9 +1,6 @@
 ###
 # 
 ###
-angular
-	.module('sp.client')
-	.provider 'SpViewBuilder', SpViewBuilderProvider
 
 SpViewBuilderProvider = ->
 	builder =
@@ -53,3 +50,7 @@ SpViewBuilder = (ContentBlockService, builder) ->
 	service = 
 		builder: builder
 	service
+
+angular
+	.module('sp.client')
+	.provider 'SpViewBuilder', SpViewBuilderProvider
