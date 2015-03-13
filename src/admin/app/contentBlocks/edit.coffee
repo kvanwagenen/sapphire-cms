@@ -22,13 +22,16 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 		_renderer = _editor.renderer;
 
 		# Options
-		_editor.setReadOnly true
+		_editor.setReadOnly false
 		_session.setUndoManager new ace.UndoManager()
 		_renderer.setShowGutter false
 
 		# Events
 		_editor.on "changeSession", ->
 		_session.on "change", ->
+
+		if $scope? && $scope.block?
+			_editor.setValue($scope.block.body)
 
 	$scope.onAceChanged = (e) ->
 		$scope.block.body = @editor.getValue()
