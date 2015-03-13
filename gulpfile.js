@@ -8,11 +8,11 @@ var uglify = require('gulp-uglify');
 var slim = require('gulp-slim');
 var sourcemaps = require('gulp-sourcemaps');
 var gulpcopy = require('gulp-copy');
-var debug = require('gulp-debug');
+// var debug = require('gulp-debug');
 // var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
 
 var argv = require('yargs').argv;
-var karma = require('karma').server;
+// var karma = require('karma').server;
 
 var del = require('del');
 var path = require('path');
@@ -138,7 +138,6 @@ var copyFilesToLocalRailsEngine = function(src, destDir){
     prefix = src[0].split('/').length
   }
   return gulp.src(src)
-    .pipe(debug({title: 'sapphire'}))
     .pipe(gulpcopy(destDir, {
       prefix: prefix,
 
@@ -193,13 +192,13 @@ gulp.task('compile:all', [
   'compile:admin:templates'
 ]);
 
-gulp.task('test', function(doneCb){
-  karma.start({
-    configFile: __dirname + 'test/karma.conf.js',
-    autoWatch: false,
-    singleRun: true
-  }, doneCb);
-});
+// gulp.task('test', function(doneCb){
+//   karma.start({
+//     configFile: __dirname + 'test/karma.conf.js',
+//     autoWatch: false,
+//     singleRun: true
+//   }, doneCb);
+// });
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
