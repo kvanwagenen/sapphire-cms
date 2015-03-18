@@ -1,4 +1,4 @@
-SapphireAdmin.controller 'ContentBlockNewController', ['$scope', '$location', 'ContentBlockService', ($scope, $location, ContentBlockService) ->
+SapphireAdmin.controller 'ContentBlockNewController', ['$scope', '$location', 'ContentBlockService', '$window', ($scope, $location, ContentBlockService, $window) ->
 	$scope.block = 
 		title: null
 		slug: null
@@ -12,4 +12,11 @@ SapphireAdmin.controller 'ContentBlockNewController', ['$scope', '$location', 'C
 			, (err) ->
 				alert('Error creating content block')
 			)
+
+	$scope.preview = ->
+		ContentBlockService.save($scope.block)
+			.then (success) ->
+				$window.open("/#/#{$scope.block.slug}")
+			, (err) ->
+				alert('Unable to preview because there was an error when saving')
 ]
