@@ -1,4 +1,4 @@
-SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams', 'ContentBlockService', ($scope, $routeParams, ContentBlockService) ->
+SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams', 'ContentBlockService', "$location", "$window", ($scope, $routeParams, ContentBlockService, $location, $window) ->
 	@editor = null
 
 	ContentBlockService.find($routeParams.id)
@@ -12,6 +12,13 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 				alert('Successfully saved!')
 			, (err) ->
 				alert('Error saving block')
+
+	$scope.preview = ->
+		ContentBlockService.save($scope.block)
+			.then (success) ->
+				$window.open("/#/#{$scope.block.slug}")
+			, (err) ->
+				alert('Can not preview')
 
 	$scope.onAceLoaded = (_editor) ->
 		# Save editor
@@ -35,4 +42,6 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 
 	$scope.onAceChanged = (e) ->
 		$scope.block.body = @editor.getValue()
+
+#	$scope.preview =
 ]

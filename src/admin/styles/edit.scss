@@ -7,3 +7,13 @@
   @extend .btn;
   @extend .btn-success;
 }
+
+.return-to-list-block-button {
+  @extend .btn;
+  @extend .btn-default;
+}
+
+.preview-block-button {
+  @extend .btn;
+  @extend .btn-success;
+}

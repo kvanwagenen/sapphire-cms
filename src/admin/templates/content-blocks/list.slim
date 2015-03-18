@@ -46,6 +46,10 @@
 									i.fa.fa-copy
 									| &nbsp; Duplicate
 							li
-								button.delete-block-button ng-confirm-message="Are you sure you want to delete this block?" ng-confirm-click="destroy(block)" 
+								button.delete-block-button ng-confirm-message="Are you sure you want to delete this block?" ng-confirm-click="destroy(block)"
 									i.fa.fa-trash
 									| &nbsp; Delete
+							li
+								a.preview-block-button target="_blank" ng-href="/#/{{block.slug}}"
+									i.fa.fa-search
+									| &nbsp; Preview
