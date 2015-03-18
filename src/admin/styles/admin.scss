@@ -55,3 +55,9 @@ input, textarea {
   @extend .btn;
   @extend .btn-danger;
 }
+
+.preview-block-button {
+  @extend .btn;
+  @extend .btn-success;
+}
+
