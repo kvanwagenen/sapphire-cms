@@ -62,5 +62,31 @@ angular.module('sp.core').factory "ContentBlockService", ['$http', '$cacheFactor
 				.then (response) ->
 					response.data
 
-	service
+		init: ->
+			@slugCache.oldPut = @slugCache.put
+			
+			@slugCache.put = (block) ->
+				if (versions = @get(block.slug))?
+					versions[block.version] = block
+				else
+					versions = {}
+					versions[block.version] = block
+					@oldPut block.slug, versions
+			
+			@slugCache.getVersion = (slug, version) ->
+				@get(slug)[version]
+			
+			@slugCache.getNewestPublished = (slug) ->
+				versions = Object.keys(@get(slug)).sort (a,b) ->
+					b - a
+				block = null
+				for version in versions
+					block = @get(slug)[version]
+					if block.status == 'published'
+						break
+				block
+
+			@
+
+	service.init()
 ]
