@@ -36,7 +36,7 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 					.then (response) ->
 						if response.data.length > 0 && response.data[0]
 							block = response.data[0]
-							service.slugCache.put(slug, block)
+							service.slugCache.put(block)
 							service.idCache.put(block.id, block)
 						block
 					, (error) ->
