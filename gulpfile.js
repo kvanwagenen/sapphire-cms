@@ -8,6 +8,7 @@ var uglify = require('gulp-uglify');
 var slim = require('gulp-slim');
 var sourcemaps = require('gulp-sourcemaps');
 var gulpcopy = require('gulp-copy');
+var plumber = require('gulp-plumber');
 // var debug = require('gulp-debug');
 // var imagemin = require('gulp-imagemin'); // Removed because plugin doesn't work on Windows as a result of long paths
 
@@ -48,6 +49,7 @@ var files = {
 
 var compileModuleCss = function(src, dest){
   return gulp.src(src)
+    .pipe(plumber())
     .pipe(gulpif(/[.]scss$/, sass()))
     .pipe(concat(dest))
     .pipe(gulp.dest(path.join('dist')));
@@ -55,6 +57,7 @@ var compileModuleCss = function(src, dest){
 
 var compileModuleJs = function(src, dest){
   return gulp.src(src)
+    .pipe(plumber())
     .pipe(gulpif(/[.]coffee$/, coffee()))
     .pipe(concat(dest))
     .pipe(gulp.dest(path.join('dist')));
@@ -62,6 +65,7 @@ var compileModuleJs = function(src, dest){
 
 var compileModuleTemplates = function(src, dest){
   return gulp.src(src)
+    .pipe(plumber())
     .pipe(gulpif(/[.]slim$/, slim({
       pretty: true,
       options: "attr_list_delims={'(' => ')', '[' => ']'}"
