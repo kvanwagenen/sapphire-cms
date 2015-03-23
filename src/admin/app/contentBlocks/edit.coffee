@@ -31,7 +31,7 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 		# Options
 		_editor.setReadOnly false
 		_session.setUndoManager new ace.UndoManager()
-		_renderer.setShowGutter false
+		_renderer.setShowGutter true
 
 		# Events
 		_editor.on "changeSession", ->
