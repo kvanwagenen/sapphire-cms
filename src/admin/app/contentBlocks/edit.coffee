@@ -6,6 +6,9 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 			$scope.block = data
 			if @editor?
 				@editor.setValue($scope.block.body)
+	ContentBlockService.get().then (data) ->
+		$scope.contentBlocks = data
+
 	$scope.save = ->
 		ContentBlockService.save($scope.block)
 			.then (success) ->
@@ -43,7 +46,6 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 	$scope.onAceChanged = (e) ->
 		$scope.block.body = @editor.getValue()
 
-	ContentBlockService.get().then (data) ->
-		$scope.contentBlocks = data
+
 
 ]

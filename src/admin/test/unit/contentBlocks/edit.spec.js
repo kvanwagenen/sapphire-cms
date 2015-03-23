@@ -3,7 +3,7 @@ describe('Content blocks edit controller', function(){
 	beforeEach(module('sp.admin'));
 
 	var $controller;
-	var saveDeferred, findDeferred;
+	var saveDeferred, findDeferred, getDeferred;
 
 	beforeEach(inject(function(_$controller_, _$q_, _$rootScope_){
 		$controller = _$controller_;
@@ -20,6 +20,10 @@ describe('Content blocks edit controller', function(){
 			find: function(){
 				findDeferred = $q.defer();
 				return findDeferred.promise;
+			},
+			get: function(){
+				getDeferred = $q.defer();
+				return getDeferred.promise;
 			}
 		}
 		$scope = {
@@ -29,6 +33,8 @@ describe('Content blocks edit controller', function(){
 		};
 		spyOn(contentBlockService, "find").and.callThrough();
 		spyOn(contentBlockService, "save").and.callThrough();
+		spyOn(contentBlockService, "get").and.callThrough();
+
 		controller = $controller('ContentBlockEditController', {
 			$scope: $scope,
 			ContentBlockService: contentBlockService
@@ -42,6 +48,12 @@ describe('Content blocks edit controller', function(){
 			$rootScope.$apply();
 			expect($scope.block).toEqual({name: "name"});
 		});
+		it('should load content blocks into the scope.', function(){
+			expect(contentBlockService.get).toHaveBeenCalled();
+			getDeferred.resolve([{name: "name"}]);
+			$rootScope.$apply();
+			expect($scope.contentBlocks).toEqual([{name: "name"}]);
+		})
 	});
 	
 
