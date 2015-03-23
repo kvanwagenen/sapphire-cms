@@ -1,3 +1,26 @@
+#content-block-wrapper {
+	@extend .center-block;
+	width: 100%;
+}
+
+#block-form {
+	margin-top: 12px;
+}
+
+.form-buttons > &:nth-child(n+2) {
+	margin-left: 8px;
+}
+
+.save-button {
+  @extend .btn;
+  @extend .btn-success;
+}
+
+.return-to-list-block-button, .preview-block-button {
+  @extend .btn;
+  @extend .btn-default;
+}
+
 #body-editor {
 	height: 400px;
 }

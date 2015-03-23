@@ -5,6 +5,13 @@ css:
 	}
 h1
 	|  {{ block.title }}
+.form-buttons
+	button.preview-block-button ng-click="preview()"
+		i.fa.fa-search
+		| &nbsp; Preview
+	a.return-to-list-block-button ng-href="#/content-blocks"
+		i.fa.fa-hand-o-left
+		| &nbsp; Return to List
 form#block-form
 	.form-group
 		label for="title" Title

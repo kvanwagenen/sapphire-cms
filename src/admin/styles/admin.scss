@@ -1,5 +1,4 @@
 @import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
-@import "edit";
 @import "form";
 
 // Normalizing styles
@@ -58,6 +57,6 @@ input, textarea {
 
 .preview-block-button {
   @extend .btn;
-  @extend .btn-success;
+  @extend .btn-primary;
 }
 
