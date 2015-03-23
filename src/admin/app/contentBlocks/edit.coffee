@@ -42,4 +42,8 @@ SapphireAdmin.controller 'ContentBlockEditController', ['$scope', '$routeParams'
 
 	$scope.onAceChanged = (e) ->
 		$scope.block.body = @editor.getValue()
+
+	ContentBlockService.get().then (data) ->
+		$scope.contentBlocks = data
+
 ]

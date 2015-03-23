@@ -25,4 +25,8 @@ form#block-form
 		#body-editor ui-ace="{onLoad: onAceLoaded, onChange: onAceChanged, mode: 'html', theme: 'monokai'}"
 	.form-group
 		label for="layout" Layout Block Slug
-		input.layout ng-model="block.layout_block_slug"
+		input.layout placeholder="layouts" ng-model="block.layout_block_slug"
+		select.select.layout ng-model="block.layout_block_slug"
+		  option ng-repeat="block in contentBlocks" value=" {{block.slug}} " {{block.slug}}
+
+
