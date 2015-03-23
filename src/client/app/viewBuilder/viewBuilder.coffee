@@ -29,7 +29,7 @@ SpViewBuilder = (ContentBlockService, builder) ->
 				template = template.replace("<sp-yield></sp-yield>", block.body)
 			template
 		getLayout = (layoutBlockSlug) ->
-			ContentBlockService.findBySlug(layoutBlockSlug)
+			ContentBlockService.getNewestPublished(layoutBlockSlug)
 				.then (layout) ->
 					if layout?
 						block = layout
@@ -37,7 +37,7 @@ SpViewBuilder = (ContentBlockService, builder) ->
 						if block.layoutBlockSlug?
 							getLayout(block.layoutBlockSlug)
 
-		ContentBlockService.findBySlug(slug)
+		ContentBlockService.getNewestPublished(slug)
 			.then (block) ->
 				blocks.push(block)
 				if block.layoutBlockSlug?

@@ -35,3 +35,21 @@ angular.module('sp.core').factory 'ContentBlockFactory', ->
 		version: 4
 		status: 'unpublished'
 		layoutBlockSlug: null
+	wrap:
+		title: "Wrapping Block"
+		slug: "wrap"
+		body: "<h1>I should wrap</h1><sp-include slug=\"wrapped\"></sp-include>"
+		createdAt: Date.now()
+		updatedAt: Date.now()
+		version: 1
+		status: 'published'
+		layoutBlockSlug: null
+	wrapped:
+		title: "Wrapped Block"
+		slug: "wrapped"
+		body: "<h1 id=\"wrapped-header\">I should be wrapped</h1>"
+		createdAt: Date.now()
+		updatedAt: Date.now()
+		version: 1
+		status: 'published'
+		layoutBlockSlug: null

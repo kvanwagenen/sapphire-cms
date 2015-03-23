@@ -8,9 +8,12 @@ describe 'spInclude directive', ->
 	beforeEach module 'sp.client', ($provide) ->
 		$provide.provider 'ContentBlockService', ->
 			@$get = ->
-				findBySlug: (slug, version) -> 
+				getNewestPublished: (slug, version) -> 
 					deferred = $q.defer()
-					deferred.resolve(factory.basicBlock)
+					if slug == 'wrap'
+						deferred.resolve(factory.wrap)
+					else
+						deferred.resolve(factory.wrapped)
 					deferred.promise
 			@
 		null
@@ -22,8 +25,15 @@ describe 'spInclude directive', ->
 			$rootScope = _$rootScope_
 			factory = _ContentBlockFactory_
 
-	describe 'when passed a slug parameter', ->
-		it 'replaces the element with the body of the block returned by the content block service', ->
-			element = $compile("<div><sp-include slug=\"#{factory.basicBlock.slug}\"></sp-include></div>")($rootScope)
+	describe 'with a slug attribute', ->
+		element = null
+		beforeEach ->
+			element = $compile("<div><sp-include slug=\"#{factory.wrap.slug}\"></sp-include></div>")($rootScope)
 			$rootScope.$apply()
-			expect(element.html()).toEqual factory.basicBlock.body
+
+		it 'replaces the element with the body of the block of the given slug', ->
+			compiled = factory.wrap.body.slice().replace("<sp-include slug=\"wrapped\"></sp-include>", factory.wrapped.body)
+			expect(element.html().replace(/\s*class="ng-scope"/g, "")).toEqual compiled
+
+		it 'compiles and links the body of the block included', ->
+			expect(element.html().indexOf('wrapped-header')).toBeGreaterThan(-1)

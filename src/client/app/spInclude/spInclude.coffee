@@ -1,21 +1,21 @@
-SpIncludeDirective = ['ContentBlockService', '$animate', '$sce', (ContentBlockService, $animate, $sce) ->
+SpIncludeDirective = ['ContentBlockService', '$animate', '$sce', '$compile', (ContentBlockService, $animate, $sce, $compile) ->
 	restrict: 'EA'
 	priority: 400
 	terminal: true
 	replace: false
-	template: "<div>SpInclude Placeholder Template</div>"
 	controller: angular.noop
-	scope: 
+	scope:
 		slug: '@'
 	compile: (element, attrs) ->
 		# Post-link function
-		(scope, element, attrs) ->
+		(scope, element, attrs, controller) ->
 			scope.$watch 'slug', (slug) ->
-				ContentBlockService.findBySlug(slug)
+				ContentBlockService.getNewestPublished(slug)
 					.then (block) ->
-						element.replaceWith(block.body)
-					, (err) ->
-
+						parent = element.parent()
+						element.html(block.body)
+						$compile(element.contents()) scope
+						element.replaceWith(element.contents())
 ]
 
 angular.module('sp.client').directive 'spInclude', SpIncludeDirective

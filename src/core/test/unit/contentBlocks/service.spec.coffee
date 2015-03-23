@@ -5,10 +5,9 @@ describe 'Content blocks service', ->
 	factory = null
 
 	beforeEach ->
-		inject (_$q_, _$rootScope_, _$http_, _ContentBlockService_, _ContentBlockFactory_) ->
+		inject (_$q_, _$rootScope_, _ContentBlockService_, _ContentBlockFactory_) ->
 			$q = _$q_
 			$rootScope = _$rootScope_
-			$http = _$http_
 			service = _ContentBlockService_
 			factory = _ContentBlockFactory_
 
@@ -41,5 +40,7 @@ describe 'Content blocks service', ->
 				service.slugCache.put factory.basicUnpublishedV4
 				service.slugCache.put factory.basicPublishedV2				
 
-			it 'returns the published block with the highest version for a given slug', ->
-				expect(service.slugCache.getNewestPublished(factory.basicPublishedV2.slug)).toBe(factory.basicPublishedV3)
+			it 'returns a promise that resolves to the published block with the highest version for a given slug', ->
+				promise = service.slugCache.getNewestPublished(factory.basicPublishedV2.slug)
+				expect(promise.$$state.value).toBe(factory.basicPublishedV3)
+				

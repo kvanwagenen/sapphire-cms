@@ -1,7 +1,7 @@
-angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', (Util, $http, $cacheFactory, $q) ->
+angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', (Util, $http, $cacheFactory, $q, SlugCache) ->
 	service =
 		idCache: $cacheFactory('blocksById')
-		slugCache: $cacheFactory('blocksBySlug')
+		slugCache: SlugCache
 
 		get: (params=null, page=null, pageSize=null) ->
 			$http({url: Util.url("/content_blocks"), method: "GET", params: params, headers: {'Accept': 'application/json'}})
@@ -10,8 +10,7 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 
 		find: (id) ->
 			block = null
-			if block = service.idCache.get(id)
-				deferred = $q.defer()
+			if block = service.idCache.get(id)				
 				deferred.resolve(block)
 				deferred.promise
 			else
@@ -25,22 +24,8 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 					, (error) ->
 						console.log error
 
-		findBySlug: (slug, includeUnpublished=false) ->
-			block = null
-			if block = service.slugCache.get(slug)
-				deferred = $q.defer()
-				deferred.resolve(block)
-				deferred.promise
-			else
-				$http({url: Util.url("/content_blocks"), method: "GET", params: {slug: slug, includeUnpublished: includeUnpublished}, headers: {'Accept': 'application/json'}})
-					.then (response) ->
-						if response.data.length > 0 && response.data[0]
-							block = response.data[0]
-							service.slugCache.put(block)
-							service.idCache.put(block.id, block)
-						block
-					, (error) ->
-						console.log error
+		getNewestPublished: (slug) ->
+			service.slugCache.getNewestPublished slug	
 
 		save: (block) ->
 			if block.id
@@ -63,29 +48,7 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 					response.data
 
 		init: ->
-			@slugCache.oldPut = @slugCache.put
-			
-			@slugCache.put = (block) ->
-				if (versions = @get(block.slug))?
-					versions[block.version] = block
-				else
-					versions = {}
-					versions[block.version] = block
-					@oldPut block.slug, versions
-			
-			@slugCache.getVersion = (slug, version) ->
-				@get(slug)[version]
-			
-			@slugCache.getNewestPublished = (slug) ->
-				versions = Object.keys(@get(slug)).sort (a,b) ->
-					b - a
-				block = null
-				for version in versions
-					block = @get(slug)[version]
-					if block.status == 'published'
-						break
-				block
-
+			@slugCache.idCache = @idCache
 			@
 
 	service.init()
