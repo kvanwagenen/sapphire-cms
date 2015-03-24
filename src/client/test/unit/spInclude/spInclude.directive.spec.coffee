@@ -10,10 +10,11 @@ describe 'spInclude directive', ->
 			@$get = ->
 				getNewestPublished: (slug, version) -> 
 					deferred = $q.defer()
-					if slug == 'wrap'
-						deferred.resolve(factory.wrap)
-					else
-						deferred.resolve(factory.wrapped)
+					deferred.resolve(factory[slug])
+					# if slug == 'wrap'
+					# 	deferred.resolve(factory.wrap)
+					# else
+					# 	deferred.resolve(factory.wrapped)
 					deferred.promise
 			@
 		null
@@ -31,9 +32,16 @@ describe 'spInclude directive', ->
 			element = $compile("<div><sp-include slug=\"#{factory.wrap.slug}\"></sp-include></div>")($rootScope)
 			$rootScope.$apply()
 
-		it 'replaces the element with the body of the block of the given slug', ->
-			compiled = factory.wrap.body.slice().replace("<sp-include slug=\"wrapped\"></sp-include>", factory.wrapped.body)
-			expect(element.html().replace(/\s*class="ng-scope"/g, "")).toEqual compiled
+		describe 'and a block without a layout', ->
+			it 'replaces the element with the body of the block of the given slug', ->
+				compiled = factory.wrap.body.slice().replace("<sp-include slug=\"wrapped\"></sp-include>", factory.wrapped.body)
+				expect(element.html().replace(/\s*class="ng-scope"/g, "")).toEqual compiled
 
-		it 'compiles and links the body of the block included', ->
-			expect(element.html().indexOf('wrapped-header')).toBeGreaterThan(-1)
+			it 'compiles and links the body of the block included', ->
+				expect(element.html().indexOf('wrapped-header')).toBeGreaterThan(-1)
+
+		describe 'and a block with a layout', ->
+			it 'injects the block into it\'s layout if set', ->
+				element = $compile("<div><sp-include slug=\"#{factory.withLayout.slug}\"></sp-include></div>")($rootScope)
+				$rootScope.$digest()
+				expect(element.html().indexOf('I\'m a layout')).toBeGreaterThan(-1)

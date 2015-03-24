@@ -1,4 +1,4 @@
-SpIncludeDirective = ['ContentBlockService', '$animate', '$sce', '$compile', (ContentBlockService, $animate, $sce, $compile) ->
+SpIncludeDirective = ['ContentBlockService', 'SpViewBuilder', '$animate', '$sce', '$compile', (ContentBlockService, SpViewBuilder, $animate, $sce, $compile) ->
 	restrict: 'EA'
 	priority: 400
 	terminal: true
@@ -10,12 +10,10 @@ SpIncludeDirective = ['ContentBlockService', '$animate', '$sce', '$compile', (Co
 		# Post-link function
 		(scope, element, attrs, controller) ->
 			scope.$watch 'slug', (slug) ->
-				ContentBlockService.getNewestPublished(slug)
-					.then (block) ->
-						parent = element.parent()
-						element.html(block.body)
-						$compile(element.contents()) scope
-						element.replaceWith(element.contents())
+				SpViewBuilder.builder.build({slug: slug}).then (template) ->
+					element.html(template)
+					$compile(element.contents()) scope
+					element.replaceWith(element.contents())
 ]
 
 angular.module('sp.client').directive 'spInclude', SpIncludeDirective
