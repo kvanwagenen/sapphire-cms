@@ -28,20 +28,20 @@ SpViewBuilder = (ContentBlockService, builder) ->
 			angular.forEach blocks, (block) ->
 				template = template.replace("<sp-yield></sp-yield>", block.body)
 			template
-		getLayout = (layoutBlockSlug) ->
-			ContentBlockService.getNewestPublished(layoutBlockSlug)
+		getLayout = (layout_block_slug) ->
+			ContentBlockService.getNewestPublished(layout_block_slug)
 				.then (layout) ->
 					if layout?
 						block = layout
 						blocks.push(layout)
-						if block.layoutBlockSlug?
-							getLayout(block.layoutBlockSlug)
+						if block.layout_block_slug?
+							getLayout(block.layout_block_slug)
 
 		ContentBlockService.getNewestPublished(slug)
 			.then (block) ->
 				blocks.push(block)
-				if block.layoutBlockSlug?
-					getLayout(block.layoutBlockSlug)
+				if block.layout_block_slug?
+					getLayout(block.layout_block_slug)
 						.then ->
 							compile()
 				else
