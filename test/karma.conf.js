@@ -18,6 +18,7 @@ module.exports = function(config) {
       {pattern: 'test/bower_components/ace-builds/src-min-noconflict/ace.js'},
       {pattern: 'test/bower_components/angular/angular.js', included: true},
       {pattern: 'test/bower_components/angular-route/angular-route.js', included: true},
+      {pattern: 'test/bower_components/angular-ui-router/release/angular-ui-router.js', included: true},
       {pattern: 'test/bower_components/angular-mocks/angular-mocks.js', included: true},
       {pattern: 'test/bower_components/angular-ui-ace/ui-ace.js'},
       {pattern: 'dist/**/*.js'},

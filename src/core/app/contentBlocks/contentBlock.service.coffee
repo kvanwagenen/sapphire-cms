@@ -1,7 +1,8 @@
-angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', (Util, $http, $cacheFactory, $q, SlugCache) ->
+angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', 'SlugManifest', (Util, $http, $cacheFactory, $q, SlugCache, SlugManifest) ->
 	service =
 		idCache: $cacheFactory('blocksById')
 		slugCache: SlugCache
+		slugManifest: SlugManifest
 
 		get: (params=null, page=null, pageSize=null) ->
 			$http({url: Util.url("/content_blocks"), method: "GET", params: params, headers: {'Accept': 'application/json'}})
@@ -26,6 +27,17 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 
 		getNewestPublished: (slug) ->
 			service.slugCache.getNewestPublished slug	
+
+		getSlugManifest: ->
+			if !@slugManifest?
+				$http.get(Util.url("/content_blocks/slugs"))
+					.then (manifest) ->
+						service.slugManifest = manifest
+						manifest
+			else
+				deferred = $q.defer()
+				deferred.resolve(@slugManifest)
+				deferred.promise
 
 		save: (block) ->
 			if block.id

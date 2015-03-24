@@ -8,13 +8,13 @@ SpViewBuilderProvider = ->
 			""
 	@template = ($routeParams) ->
 		builder.build($routeParams)
-	@$get = ['ContentBlockService', (ContentBlockService) ->
+	@$get = ['ContentBlockService', '$urlMatcherFactory', (ContentBlockService, UrlMatcherFactory) ->
 		# Returns the view builder service
-		return new SpViewBuilder(ContentBlockService, builder)
+		return new SpViewBuilder(ContentBlockService, UrlMatcherFactory, builder)
 	]
 	@
 
-SpViewBuilder = (ContentBlockService, builder) ->
+SpViewBuilder = (ContentBlockService, UrlMatcherFactory, builder) ->
 	builder.build = ($routeParams) ->
 		blocks = []
 

@@ -1,20 +1,71 @@
 describe 'Content blocks service', ->
-	beforeEach module('sp.core')
-
+	$q = null
+	$rootScope = null
+	$http = null
 	service = null
 	factory = null
+	manifestMocks = null
+	deferred = null
 
 	beforeEach ->
-		inject (_$q_, _$rootScope_, _ContentBlockService_, _ContentBlockFactory_) ->
+		module 'sp.core', ($provide) ->
+			$provide.provider '$http', ->
+				@$get = ->
+					get: (options) ->
+						deferred = $q.defer()
+						deferred.promise
+				@
+			null
+
+	beforeEach ->
+		inject (_$q_, _$rootScope_, _$http_, _ContentBlockService_, _ContentBlockFactory_, _ContentBlockManifestMocks_) ->
 			$q = _$q_
 			$rootScope = _$rootScope_
+			$http = _$http_
 			service = _ContentBlockService_
 			factory = _ContentBlockFactory_
-
-	beforeEach ->
+			manifestMocks = _ContentBlockManifestMocks_
 
 	it 'is injected', ->
 		expect(service).not.toBe(null)
+
+	describe 'getSlugManifest function', ->
+		manifest = null
+
+		describe 'when slugs are not cached', ->
+			beforeEach ->
+				manifest = null
+				service.slugManifest = null
+				spyOn($http, 'get').and.callThrough()
+				service.getSlugManifest().then (_manifest) ->
+					manifest = _manifest
+				deferred.resolve(manifestMocks.basic)
+				$rootScope.$digest()
+
+			it 'should request a manifest of unique slugs from the server if not cached', ->
+				expect($http.get).toHaveBeenCalled()
+
+			it 'should return an associative array of unique slugs and block ids', ->
+				expect(manifest).toEqual(manifestMocks.basic)
+
+			it 'should be cached after requesting', ->
+				expect(service.slugManifest).toEqual(manifest)
+
+		describe 'when slugs are cached', ->
+
+			beforeEach ->
+				manifest = null
+				service.slugManifest = manifestMocks.basic
+				spyOn($http, 'get').and.callThrough()
+				service.getSlugManifest().then (_manifest) ->
+					manifest = _manifest
+				deferred.resolve(manifestMocks.basic)
+				$rootScope.$digest()
+
+			it 'should return the manifest of slugs from the cache', ->
+				expect($http.get).not.toHaveBeenCalled()
+				expect(manifest).toEqual(manifestMocks.basic)
+
 
 	describe 'slugCache', ->
 
