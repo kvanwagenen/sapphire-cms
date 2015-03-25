@@ -1,5 +1,6 @@
-angular.module('sp.core').factory 'ContentBlockFactory', ->
-	basicBlock: 
+angular.module('sp.core').factory 'ContentBlockMocks', ->
+	basicBlock:
+		id: 1
 		title: "Basic Block"
 		slug: "basic"
 		body: "<h1>Basic Block Body</h1>"

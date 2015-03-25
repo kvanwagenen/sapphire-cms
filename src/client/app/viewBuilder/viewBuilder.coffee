@@ -46,7 +46,7 @@ SpViewBuilder = (ContentBlockService, UrlMatcherFactory, builder) ->
 							compile()
 				else
 					compile()
-		
+	
 	service = 
 		builder: builder
 	service

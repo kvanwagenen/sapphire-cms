@@ -3,7 +3,7 @@ describe 'Content blocks service', ->
 	$rootScope = null
 	$http = null
 	service = null
-	factory = null
+	mocks = null
 	manifestMocks = null
 	deferred = null
 
@@ -18,51 +18,51 @@ describe 'Content blocks service', ->
 			null
 
 	beforeEach ->
-		inject (_$q_, _$rootScope_, _$http_, _ContentBlockService_, _ContentBlockFactory_, _ContentBlockManifestMocks_) ->
+		inject (_$q_, _$rootScope_, _$http_, _ContentBlockService_, _ContentBlockMocks_, _RouteManifestMocks_) ->
 			$q = _$q_
 			$rootScope = _$rootScope_
 			$http = _$http_
 			service = _ContentBlockService_
-			factory = _ContentBlockFactory_
-			manifestMocks = _ContentBlockManifestMocks_
+			mocks = _ContentBlockMocks_
+			manifestMocks = _RouteManifestMocks_
 
 	it 'is injected', ->
 		expect(service).not.toBe(null)
 
-	describe 'getSlugManifest function', ->
+	describe 'getRouteManifest function', ->
 		manifest = null
 
-		describe 'when slugs are not cached', ->
+		describe 'when routes are not cached', ->
 			beforeEach ->
 				manifest = null
-				service.slugManifest = null
+				service.routeManifest = null
 				spyOn($http, 'get').and.callThrough()
-				service.getSlugManifest().then (_manifest) ->
+				service.getRouteManifest().then (_manifest) ->
 					manifest = _manifest
 				deferred.resolve(manifestMocks.basic)
 				$rootScope.$digest()
 
-			it 'should request a manifest of unique slugs from the server if not cached', ->
+			it 'should request a manifest of unique routes from the server if not cached', ->
 				expect($http.get).toHaveBeenCalled()
 
-			it 'should return an associative array of unique slugs and block ids', ->
+			it 'should return an associative array of unique routes and block ids', ->
 				expect(manifest).toEqual(manifestMocks.basic)
 
 			it 'should be cached after requesting', ->
-				expect(service.slugManifest).toEqual(manifest)
+				expect(service.routeManifest).toEqual(manifest)
 
-		describe 'when slugs are cached', ->
+		describe 'when routes are cached', ->
 
 			beforeEach ->
 				manifest = null
-				service.slugManifest = manifestMocks.basic
+				service.routeManifest = manifestMocks.basic
 				spyOn($http, 'get').and.callThrough()
-				service.getSlugManifest().then (_manifest) ->
+				service.getRouteManifest().then (_manifest) ->
 					manifest = _manifest
 				deferred.resolve(manifestMocks.basic)
 				$rootScope.$digest()
 
-			it 'should return the manifest of slugs from the cache', ->
+			it 'should return the manifest of routes from the cache', ->
 				expect($http.get).not.toHaveBeenCalled()
 				expect(manifest).toEqual(manifestMocks.basic)
 
@@ -74,24 +74,24 @@ describe 'Content blocks service', ->
 
 		beforeEach ->
 			service.slugCache.removeAll()
-			service.slugCache.put(factory.basicBlock)
+			service.slugCache.put(mocks.basicBlock)
 
 		describe 'get function', ->
 			it 'returns an object', ->
-				expect(service.slugCache.get(factory.basicBlock.slug) instanceof Object).toBe(true)
+				expect(service.slugCache.get(mocks.basicBlock.slug) instanceof Object).toBe(true)
 
 		describe 'getVersion function when passed a version', ->
 			it 'returns a block with a given slug and version', ->
-				expect(service.slugCache.getVersion(factory.basicBlock.slug, factory.basicBlock.version)).toBe(factory.basicBlock)
+				expect(service.slugCache.getVersion(mocks.basicBlock.slug, mocks.basicBlock.version)).toBe(mocks.basicBlock)
 
 		describe 'getNewestPublished function', ->
 			beforeEach ->
 				service.slugCache.removeAll()
-				service.slugCache.put factory.basicPublishedV3
-				service.slugCache.put factory.basicUnpublishedV4
-				service.slugCache.put factory.basicPublishedV2				
+				service.slugCache.put mocks.basicPublishedV3
+				service.slugCache.put mocks.basicUnpublishedV4
+				service.slugCache.put mocks.basicPublishedV2				
 
 			it 'returns a promise that resolves to the published block with the highest version for a given slug', ->
-				promise = service.slugCache.getNewestPublished(factory.basicPublishedV2.slug)
-				expect(promise.$$state.value).toBe(factory.basicPublishedV3)
+				promise = service.slugCache.getNewestPublished(mocks.basicPublishedV2.slug)
+				expect(promise.$$state.value).toBe(mocks.basicPublishedV3)
 				

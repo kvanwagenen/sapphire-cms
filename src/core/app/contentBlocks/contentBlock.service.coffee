@@ -1,8 +1,8 @@
-angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', 'SlugManifest', (Util, $http, $cacheFactory, $q, SlugCache, SlugManifest) ->
+angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', 'RouteManifest', (Util, $http, $cacheFactory, $q, SlugCache, RouteManifest) ->
 	service =
 		idCache: $cacheFactory('blocksById')
 		slugCache: SlugCache
-		slugManifest: SlugManifest
+		routeManifest: RouteManifest
 
 		get: (params=null, page=null, pageSize=null) ->
 			$http({url: Util.url("/content_blocks"), method: "GET", params: params, headers: {'Accept': 'application/json'}})
@@ -28,15 +28,15 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 		getNewestPublished: (slug) ->
 			service.slugCache.getNewestPublished slug	
 
-		getSlugManifest: ->
-			if !@slugManifest?
-				$http.get(Util.url("/content_blocks/slugs"))
+		getRouteManifest: ->
+			if !@routeManifest?
+				$http.get(Util.url("/content_blocks/routes"))
 					.then (manifest) ->
-						service.slugManifest = manifest
+						service.routeManifest = manifest
 						manifest
 			else
 				deferred = $q.defer()
-				deferred.resolve(@slugManifest)
+				deferred.resolve(@routeManifest)
 				deferred.promise
 
 		save: (block) ->

@@ -11,20 +11,16 @@ describe 'spInclude directive', ->
 				getNewestPublished: (slug, version) -> 
 					deferred = $q.defer()
 					deferred.resolve(factory[slug])
-					# if slug == 'wrap'
-					# 	deferred.resolve(factory.wrap)
-					# else
-					# 	deferred.resolve(factory.wrapped)
 					deferred.promise
 			@
 		null
 
 	beforeEach ->
-		inject (_$compile_, _$q_, _$rootScope_, _ContentBlockFactory_) ->
+		inject (_$compile_, _$q_, _$rootScope_, _ContentBlockMocks_) ->
 			$compile = _$compile_
 			$q = _$q_
 			$rootScope = _$rootScope_
-			factory = _ContentBlockFactory_
+			factory = _ContentBlockMocks_
 
 	describe 'with a slug attribute', ->
 		element = null
