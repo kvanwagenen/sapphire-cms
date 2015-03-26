@@ -13,11 +13,16 @@ $SpRouteProvider = ->
 			lastRoute = $spRoute.current
 			nextRoute = null
 
+			checkForNextRoute = (blockId, route, path) ->
+				if !nextRoute? && UrlMatcher.checkMatch(path, route)
+					nextRoute = UrlMatcher.getPathObj(path, route)
+					nextRoute = angular.extend(nextRoute, {blockId: blockId})
+
 			# Match route to block
 			angular.forEach RouteManifest, (blockId, route) ->
-				if UrlMatcher.checkMatch($location.path(), route)
-					nextRoute = UrlMatcher.getPathObj($location.path(), route)
-					nextRoute = angular.extend(nextRoute, {blockId: blockId})
+				checkForNextRoute blockId, route, $location.path()
+				if $location.path()[0] == '/'
+					checkForNextRoute blockId, route, $location.path()[1..]
 
 			if nextRoute && nextRoute.blockId
 				$spRoute.current = nextRoute

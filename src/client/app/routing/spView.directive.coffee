@@ -2,9 +2,7 @@ SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService
 	restrict: 'ECA'
 	terminal: true
 	priority: 400
-	transclude: 'element'
 	controller: angular.noop
-	template: "<h1>Test</h1>"
 	link: (scope, $element, attributes, controller, $transclude) ->
 
 		update = ->
@@ -12,23 +10,32 @@ SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService
 			current = $spRoute.current
 			if current && current.blockId
 				ContentBlockService.find(current.blockId)
-					.then (block) ->
+					.then (routeBlock) ->
+						srcBlock = routeBlock
+						$dstElement = $element
+
+						buildView = ->
+							# Build view up to but not including the layout block already in the DOM
+							SpViewBuilder.buildForSlug(routeBlock.slug, srcBlock.layout_block_slug)
+								.then (template) ->
+									$dstElement.html(template)
+									$compile($dstElement.contents()) scope
+
+						findMergePoint = (block) ->
+							if !block.layout_block_slug?
+								srcBlock = block
+								buildView()
+							else if (yieldBlocks = $element.find("sp-yield[data-layout=#{block.layout_block_slug}]")).length > 0
+								$dstElement = angular.element(yieldBlocks[0])
+								srcBlock = block
+								buildView()
+							else
+								ContentBlockService.getNewestPublished(block.layout_block_slug)
+									.then (layoutBlock) ->
+										findMergePoint(layoutBlock)
+						findMergePoint(routeBlock)
+
 						
-						# Check if block has layout
-						# layoutSlug = block.layout_block_slug
-						# if layoutSlug?
-
-						# 	# Does the layout exist in the current DOM?
-						# 	layoutYieldEl = $element.find("sp-yield[layout=#{layoutSlug}")
-						# 	if layoutYieldEl?
-
-						# 		# Replace yield block contents with block body
-
-						# 		# Compile
-						# else
-						$element.html(block.body)
-						# $compile($element.contents()) scope
-						$element
 
 		scope.$on '$spRouteChangeSuccess', update
 		update()

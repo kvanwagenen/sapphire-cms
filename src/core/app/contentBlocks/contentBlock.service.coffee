@@ -11,7 +11,8 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 
 		find: (id) ->
 			block = null
-			if block = service.idCache.get(id)				
+			if block = service.idCache.get(id)	
+				deferred = $q.defer()			
 				deferred.resolve(block)
 				deferred.promise
 			else

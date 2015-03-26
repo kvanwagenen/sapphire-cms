@@ -13,6 +13,10 @@ describe 'spView directive', ->
 					deferred = $q.defer()
 					deferred.resolve(mocks.basicBlock)
 					deferred.promise
+				getNewestPublished: (slug) ->
+					deferred = $q.defer()
+					deferred.resolve(mocks.basicBlock)
+					deferred.promise
 			@
 		null
 
@@ -36,5 +40,5 @@ describe 'spView directive', ->
 	it 'sets its contents to the body of the block in the current route on $spRouteChangeSuccess', ->
 		$rootScope.$broadcast('$spRouteChangeSuccess')
 		$rootScope.$apply()
-		expect(element.html()).toEqual(mocks.basicBlock.body)
+		expect(element.html().replace(/\s*class="ng-scope"/g, "")).toEqual(mocks.basicBlock.body)
 
