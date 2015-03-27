@@ -22,13 +22,15 @@ module.exports = function(config) {
       {pattern: 'test/bower_components/angular-mocks/angular-mocks.js', included: true},
       {pattern: 'test/bower_components/angular-ui-ace/ui-ace.js'},
       {pattern: 'dist/**/*.js'},
+      {pattern: '../sapphire-cms-spree/dist/**/*.js'},
       {pattern: 'src/admin/test/factories/**/*.coffee'},
       {pattern: 'src/admin/test/unit/**/*.js'},
       {pattern: 'src/admin/test/unit/**/*.coffee'},
       {pattern: 'src/client/test/**/*.js'},
       {pattern: 'src/client/test/**/*.coffee'},
       {pattern: 'src/core/test/**/*.js'},
-      {pattern: 'src/core/test/**/*.coffee'}
+      {pattern: 'src/core/test/**/*.coffee'},
+      {pattern: '../sapphire-cms-spree/src/test/**/*.coffee'}
     ],
 
 
