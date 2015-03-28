@@ -1,1 +1,1 @@
-angular.module 'sp.client', ['sp.core', 'ui.router']
+angular.module 'sp.client', ['sp.core']
