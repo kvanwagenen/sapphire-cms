@@ -3,33 +3,42 @@ css:
 		height: 300px;
 		width: 100%;
 	}
-h1
-	|  {{ block.title }}
+#content-block-wrapper
+	h1
+		|  {{ block.title }}
+	.form-buttons
+		button.preview-block-button ng-click="preview()"
+			i.fa.fa-search
+			| &nbsp; Preview
+		a.return-to-list-block-button ng-href="#/content-blocks"
+			i.fa.fa-hand-o-left
+			| &nbsp; Return to List
+	form#block-form
+		.form-group
+			label for="title" Title
+			input.title ng-model="block.title"
+		.form-group
+			label for="slug" Slug
+			input.slug ng-model="block.slug"
+		.form-group
+			label for="version" Version
+			input.version type="number" min="1" ng-model="block.version"
+		.form-group
+			label for="status" Status
+			select.form-control.status ng-model="block.status"
+				option value="unpublished" Unpublished
+				option value="published" Published
+		.form-group
+			label for="body" Body
+			#body-editor ng-controller="AceEditor" ui-ace="{onLoad: onAceLoaded, onChange: onAceChanged, mode: 'html', theme: 'chrome'}"
+		.form-group
+			label for="layout" Layout Block Slug
+			input.layout ng-model="block.layout_block_slug"
 .form-buttons
+	button.save-button ng-click="save()" {{ saveCaption }}
 	button.preview-block-button ng-click="preview()"
 		i.fa.fa-search
 		| &nbsp; Preview
 	a.return-to-list-block-button ng-href="#/content-blocks"
 		i.fa.fa-hand-o-left
 		| &nbsp; Return to List
-form#block-form
-	.form-group
-		label for="title" Title
-		input.title ng-model="block.title"
-	.form-group
-		label for="slug" Slug
-		input.slug ng-model="block.slug"
-	.form-group
-		label for="version" Version
-		input.version type="number" min="1" ng-model="block.version"
-	.form-group
-		label for="status" Status
-		select.form-control.status ng-model="block.status"
-			option value="unpublished" Unpublished
-			option value="published" Published
-	.form-group
-		label for="body" Body
-		#body-editor ui-ace="{onLoad: onAceLoaded, onChange: onAceChanged, mode: 'html', theme: 'chrome'}"
-	.form-group
-		label for="layout" Layout Block Slug
-		input.layout ng-model="block.layout_block_slug"

@@ -11,12 +11,12 @@ SapphireAdmin.config ['$routeProvider', ($routeProvider) ->
 			controller: 'ContentBlocksController'
 		})
 		.when('/content-blocks/:id/edit', {
-			templateUrl: '/assets/content_blocks/edit.html',
-			controller: 'ContentBlockEditController'
+			templateUrl: '/assets/content_blocks/form.html',
+			controller: 'ContentBlockFormController'
 		})
 		.when('/content-blocks/new', {
-			templateUrl: '/assets/content_blocks/new.html',
-			controller: 'ContentBlockNewController'
+			templateUrl: '/assets/content_blocks/form.html',
+			controller: 'ContentBlockFormController'
 		})
 ]
 
