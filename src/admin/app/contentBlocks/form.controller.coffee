@@ -20,7 +20,7 @@ SapphireAdmin.controller 'ContentBlockFormController', ['$scope', '$routeParams'
 				if $routeParams.id?
 					alert('Successfully saved!')
 				else
-					$location.path('/#/content-blocks')
+					$location.path('/content-blocks')
 			, (err) ->
 				alert('Error saving block')
 
