@@ -1,4 +1,4 @@
-describe('Content blocks edit controller', function(){
+describe('Content blocks form controller', function(){
 
 	beforeEach(module('sp.admin'));
 
@@ -27,10 +27,14 @@ describe('Content blocks edit controller', function(){
 				key: "value"
 			}
 		};
+		$routeParams = {
+			id: "5"
+		};
 		spyOn(contentBlockService, "find").and.callThrough();
 		spyOn(contentBlockService, "save").and.callThrough();
-		controller = $controller('ContentBlockEditController', {
+		controller = $controller('ContentBlockFormController', {
 			$scope: $scope,
+			$routeParams: $routeParams,
 			ContentBlockService: contentBlockService
 		});
 	});
