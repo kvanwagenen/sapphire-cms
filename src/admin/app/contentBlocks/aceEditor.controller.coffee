@@ -1,9 +1,9 @@
 AceEditorController = [ '$scope', ($scope) ->
-	@editor = null
+	$scope.aceEditor = null
 
 	$scope.onAceLoaded = (_editor) ->
 		# Save editor
-		@editor = _editor
+		$scope.aceEditor = _editor
 
 		# Editor part
 		_session = _editor.getSession();
@@ -22,11 +22,11 @@ AceEditorController = [ '$scope', ($scope) ->
 			_editor.setValue($scope.block.body)
 
 	$scope.onAceChanged = (e) ->
-		$scope.block.body = @editor.getValue()
+		$scope.block.body = $scope.aceEditor.getValue()
 
 	$scope.$watch 'block', (block) ->
-		if @editor?
-			@editor.setValue(block.body)
+		if $scope.aceEditor? && block? && block.body?
+			$scope.aceEditor.setValue(block.body)
 ]
 
 angular.module('sp.admin').controller 'AceEditor', AceEditorController
