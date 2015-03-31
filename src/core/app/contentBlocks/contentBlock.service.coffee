@@ -1,4 +1,4 @@
-angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', 'RouteManifest', (Util, $http, $cacheFactory, $q, SlugCache, RouteManifest) ->
+angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cacheFactory', '$q', 'SlugCache', 'RouteManifest', 'PrecachedBlocks', (Util, $http, $cacheFactory, $q, SlugCache, RouteManifest, PrecachedBlocks) ->
 	service =
 		idCache: $cacheFactory('blocksById')
 		slugCache: SlugCache
@@ -62,6 +62,9 @@ angular.module('sp.core').factory "ContentBlockService", ['Util', '$http', '$cac
 
 		init: ->
 			@slugCache.idCache = @idCache
+			angular.forEach PrecachedBlocks, (block) =>
+				@slugCache.put(block)
+				@idCache.put(block.id, block)
 			@
 
 	service.init()

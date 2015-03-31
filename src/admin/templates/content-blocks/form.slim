@@ -28,7 +28,10 @@ css:
 			select.form-control.status ng-model="block.status"
 				option value="unpublished" Unpublished
 				option value="published" Published
-		.form-group
+		label for="precache"
+			|  Pre-Cache
+		input.precache type="checkbox" ng-model="block.precache"		
+		.form-group.body-editor
 			label for="body" Body
 			#body-editor ng-controller="AceEditor" ui-ace="{onLoad: onAceLoaded, onChange: onAceChanged, mode: 'html', theme: 'chrome'}"
 		.form-group

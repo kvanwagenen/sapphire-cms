@@ -12,6 +12,7 @@ SapphireAdmin.controller 'ContentBlockFormController', ['$scope', '$routeParams'
 			version: 1
 			body: ""
 			status: 'unpublished'
+			precache: false
 		$scope.saveCaption = 'Create'
 
 	$scope.save = ->

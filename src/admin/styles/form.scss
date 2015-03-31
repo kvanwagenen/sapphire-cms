@@ -24,3 +24,13 @@
 #body-editor {
 	height: 400px;
 }
+
+.body-editor {
+	margin-top: 12px;
+}
+
+input.precache[type="checkbox"] {
+	height: auto;
+	width: auto;
+	display: block;
+}
