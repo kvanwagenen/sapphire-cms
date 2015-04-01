@@ -29,6 +29,9 @@ describe 'Content blocks service', ->
 	it 'is injected', ->
 		expect(service).not.toBe(null)
 
+	it 'loads pre-cached blocks into to slug and id caches', ->
+		expect(true).toBe(false)
+
 	describe 'getRouteManifest function', ->
 		manifest = null
 
