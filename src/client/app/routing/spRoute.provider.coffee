@@ -33,7 +33,7 @@ $SpRouteProvider = ->
 
 		commitRouteChange = ->
 			$q.when(preparedRoute).then ->
-				nextRoute = preparedRoute
+				nextRoute = $spRoute.nextRoute = preparedRoute
 				if nextRoute && nextRoute.blockId
 					
 					# Get new block
