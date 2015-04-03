@@ -33,7 +33,7 @@ css:
 		input.precache type="checkbox" ng-model="block.precache"		
 		.form-group
 			label for="controller" Controller
-			input.controller ng-model="block.controller"
+			input.controller type="text" ng-model="block.controller"
 		.form-group.body-editor
 			label for="body" Body
 			#body-editor ng-controller="AceEditor" ui-ace="{onLoad: onAceLoaded, onChange: onAceChanged, mode: 'html', theme: 'chrome'}"
