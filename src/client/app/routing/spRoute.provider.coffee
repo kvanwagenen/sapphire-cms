@@ -1,7 +1,7 @@
 $SpRouteProvider = ->
 	controllerDependencies = {}
 
-	addControllerDependencies = (controller, deps) ->
+	@addControllerDependencies = (controller, deps) ->
 		controllerDependencies[controller] = deps
 
 	@$get = ['$rootScope', '$q', '$injector', '$location', 'UrlMatcher', 'RouteManifest', 'ContentBlockService', ($rootScope, $q, $injector, $location, UrlMatcher, RouteManifest, ContentBlockService) ->
@@ -41,7 +41,7 @@ $SpRouteProvider = ->
 
 						# If block has controller with dependencies, resolve them
 						deps = {}
-						if routeBlock? && routeBlock.controller? && (deps = $spRoute.controllerDependencies[routeBlock.controller])?
+						if routeBlock? && routeBlock.controller? && (deps = angular.copy($spRoute.controllerDependencies[routeBlock.controller]))?
 							angular.forEach deps, (value, key) ->
 								deps[key] = if angular.isString(value) then $injector.get(value) else $injector.invoke(value, null, null, key)
 						$q.all(deps)

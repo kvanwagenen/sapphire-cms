@@ -1,9 +1,9 @@
-SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService', 'SpViewBuilder', '$compile', ($spRoute, $anchorScroll, $animate, ContentBlockService, SpViewBuilder, $compile) ->
+SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService', 'SpViewBuilder', '$compile', '$controller', ($spRoute, $anchorScroll, $animate, ContentBlockService, SpViewBuilder, $compile, $controller) ->
 	restrict: 'ECA'
 	terminal: true
 	priority: 400
 	controller: angular.noop
-	link: (scope, $element, attributes, controller, $transclude) ->
+	link: (scope, $element, attributes, $transclude) ->
 
 		update = ->
 			newScope = scope.$new()
@@ -34,6 +34,14 @@ SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService
 									.then (layoutBlock) ->
 										findMergePoint(layoutBlock)
 						findMergePoint(routeBlock)
+
+						# Create controller
+						if routeBlock.controller
+							deps = current.deps
+							deps.$scope = scope
+							controller = $controller(routeBlock.controller, deps)
+							$dstElement.data('$ngControllerController', controller)
+							$dstElement.children().data('$ngControllerController', controller)
 
 						
 
