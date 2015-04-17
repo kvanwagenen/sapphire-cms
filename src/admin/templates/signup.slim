@@ -1,0 +1,8 @@
+form.sign-up-form
+	label for="email" Email
+	input type="email" name="email" ng-model="signUpForm.email"
+	label for="password" Password
+	input type="password" name="password" ng-model="signUpForm.password"
+	label for="password-confirmation" Password Confirmation
+	input type="password" name="password-confirmation" ng-model="signUpForm.password_confirmation"
+	button.sign-up ng-click="signUp()" Sign Up

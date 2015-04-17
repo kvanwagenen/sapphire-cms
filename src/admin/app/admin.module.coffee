@@ -18,6 +18,14 @@ SapphireAdmin.config ['$routeProvider', ($routeProvider) ->
 			templateUrl: '/assets/content_blocks/form.html',
 			controller: 'ContentBlockFormController'
 		})
+		.when('/login', 
+			templateUrl: '/assets/login.html'
+			controller: 'LoginController'
+		)
+		.when('/signup', 
+			templateUrl: '/assets/signup.html'
+			controller: 'SignUpController'
+		)
 ]
 
 SapphireAdmin.config ['$httpProvider', ($httpProvider) ->
