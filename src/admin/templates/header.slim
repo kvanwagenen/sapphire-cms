@@ -1,0 +1,8 @@
+nav
+	ul
+		li
+			#session-status ng-controller="AuthController"
+				span.userStatus {{ userEmail }}
+				button.signOut ng-click="signOut()" 
+				    | Sign Out &nbsp;
+				    i.fa.fa-sign-out

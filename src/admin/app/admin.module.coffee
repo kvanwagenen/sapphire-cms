@@ -2,29 +2,56 @@ window.SapphireAdmin = angular.module 'sp.admin', ['ngRoute', 'sp.core', 'ui.ace
 
 SapphireAdmin.config ['$routeProvider', ($routeProvider) ->
 	$routeProvider
-		.when('/', {
-			templateUrl: '/assets/content_blocks/list.html',
+		.when('/',
+			templateUrl: '/assets/content_blocks/list.html'
 			controller: 'ContentBlocksController'
-		})
-		.when('/content-blocks', {
-			templateUrl: '/assets/content_blocks/list.html',
+			resolve: ['$auth', '$location', ($auth, $location) ->
+				$auth.validateUser()
+					.then null, ->
+						currentPath = $location.path()
+						$location.path("/login").search('return_url', currentPath).replace()
+			]
+		)
+		.when('/content-blocks',
+			templateUrl: '/assets/content_blocks/list.html'
 			controller: 'ContentBlocksController'
-		})
-		.when('/content-blocks/:id/edit', {
-			templateUrl: '/assets/content_blocks/form.html',
+			resolve: ['$auth', '$location', ($auth, $location) ->
+				$auth.validateUser()
+					.then null, ->
+						currentPath = $location.path()
+						$location.path("/login").search('return_url', currentPath).replace()
+			]
+		)
+		.when('/content-blocks/:id/edit', 
+			templateUrl: '/assets/content_blocks/form.html'
 			controller: 'ContentBlockFormController'
-		})
-		.when('/content-blocks/new', {
-			templateUrl: '/assets/content_blocks/form.html',
+			resolve: ['$auth', '$location', ($auth, $location) ->
+				$auth.validateUser()
+					.then null, ->
+						currentPath = $location.path()
+						$location.path("/login").search('return_url', currentPath).replace()
+			]
+		)
+		.when('/content-blocks/new', 
+			templateUrl: '/assets/content_blocks/form.html'
 			controller: 'ContentBlockFormController'
-		})
+			resolve: ['$auth', '$location', ($auth, $location) ->
+				$auth.validateUser()
+					.then null, ->
+						currentPath = $location.path()
+						$location.path("/login").search('return_url', currentPath).replace()
+			]
+		)
 		.when('/login', 
-			templateUrl: '/assets/login.html'
+			templateUrl: '/assets/auth/login.html'
 			controller: 'LoginController'
 		)
 		.when('/signup', 
-			templateUrl: '/assets/signup.html'
+			templateUrl: '/assets/auth/signup.html'
 			controller: 'SignUpController'
+		)
+		.when('/confirmationSuccessful',
+			templateUrl: '/assets/auth/confirmationSuccessful.html'
 		)
 ]
 

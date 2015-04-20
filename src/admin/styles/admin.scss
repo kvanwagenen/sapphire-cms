@@ -60,3 +60,20 @@ input, textarea {
   @extend .btn-primary;
 }
 
+.signOut:hover {
+  cursor: pointer;
+}
+
+nav ul {
+  li {
+    list-style: none;
+    float: right;
+  }
+}
+
+.signOut {
+  @extend .btn;
+  @extend .btn-default;
+  margin-left: 8px;
+}
+
