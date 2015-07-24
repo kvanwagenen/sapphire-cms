@@ -1,4 +1,4 @@
-SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService', 'SpViewBuilder', '$compile', '$controller', ($spRoute, $anchorScroll, $animate, ContentBlockService, SpViewBuilder, $compile, $controller) ->
+SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService', 'SpViewBuilder', '$compile', '$controller', '$window', ($spRoute, $anchorScroll, $animate, ContentBlockService, SpViewBuilder, $compile, $controller, $window) ->
 	restrict: 'ECA'
 	terminal: true
 	priority: 400
@@ -6,6 +6,7 @@ SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService
 	link: (scope, $element, attributes, $transclude) ->
 
 		update = ->
+			$window.scrollTo(0,0)
 			newScope = scope.$new()
 			current = $spRoute.current
 			if current && current.blockId
