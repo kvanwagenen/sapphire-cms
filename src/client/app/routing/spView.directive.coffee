@@ -6,7 +6,7 @@ SpViewDirective = ['$spRoute', '$anchorScroll', '$animate', 'ContentBlockService
 	link: (scope, $element, attributes, $transclude) ->
 
 		update = ->
-			$window.scrollTo(0,0)
+			$window.scrollTo(0, 0)
 			newScope = scope.$new()
 			current = $spRoute.current
 			if current && current.blockId
